@@ -39,6 +39,7 @@ public class NetworkManager : MonoBehaviour {
     void SpawnMyPlayer() {
         PhotonNetwork.Instantiate("FPSController", RandomSpawnVector3(), Quaternion.identity, 0);
         standbyCamera.enabled = false;
+        standbyCamera.GetComponent<AudioListener>().enabled = false;
     }
 
     Vector3 RandomSpawnVector3() {

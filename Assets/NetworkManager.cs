@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class NetworkManager : MonoBehaviour {
 
@@ -19,7 +20,8 @@ public class NetworkManager : MonoBehaviour {
 	}
 
     void OnGUI() {
-        GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+        if(PhotonNetwork.inRoom)
+        GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString() + " - " + (PhotonNetwork.inRoom? PhotonNetwork.room.name : "No Room"));
     }
 
     void OnJoinedLobby() {
@@ -27,7 +29,7 @@ public class NetworkManager : MonoBehaviour {
     }
 
     void OnPhotonRandomJoinFailed() {
-        PhotonNetwork.CreateRoom(null);
+        PhotonNetwork.CreateRoom("Room 1");
     }
 
     void OnJoinedRoom() {
@@ -37,7 +39,12 @@ public class NetworkManager : MonoBehaviour {
     }
 
     void SpawnMyPlayer() {
-        PhotonNetwork.Instantiate("FPSController", RandomSpawnVector3(), Quaternion.identity, 0);
+        GameObject myPlayer = PhotonNetwork.Instantiate("FPSController", RandomSpawnVector3(), Quaternion.identity, 0);
+        FirstPersonController myPlayerController = myPlayer.GetComponent<FirstPersonController>();
+        myPlayerController.enabled = true;
+        myPlayerController.GetComponentInChildren<Camera>().enabled = true;
+        myPlayerController.GetComponentInChildren<AudioListener>().enabled = true;
+
         standbyCamera.enabled = false;
         standbyCamera.GetComponent<AudioListener>().enabled = false;
     }
